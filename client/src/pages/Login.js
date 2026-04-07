@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
@@ -15,7 +14,6 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         setIsSubmitting(true);
         try {
             await login(email, password);
@@ -38,7 +36,6 @@ const Login = () => {
         } catch (err) {
             const msg = err.response?.data?.message || 'Invalid credentials. Access denied.';
             toast.error(msg);
-            setError(msg);
         } finally {
             setIsSubmitting(false);
         }
