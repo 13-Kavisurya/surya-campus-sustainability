@@ -2,7 +2,6 @@
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/build",
   "framework": "create-react-app",
-  "public": "client/public",
   "env": {
     "REACT_APP_API_URL": "https://surya-campus-sustainability-2.onrender.com"
   }
