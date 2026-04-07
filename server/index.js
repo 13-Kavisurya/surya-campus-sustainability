@@ -24,7 +24,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.options('*', cors());
+app.options('/*', cors());
 
 // Request logging middleware
 app.use((req, res, next) => {
