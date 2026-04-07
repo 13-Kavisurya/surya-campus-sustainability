@@ -6,6 +6,9 @@
     ],
     "react-hooks/exhaustive-deps": [
       "off"
+    ],
+    "react/jsx-no-comment-textnodes": [
+      "off"
     ]
   }
 }
