@@ -42,7 +42,7 @@ const LoginQrCode = () => {
                     <div className="mb-4 w-100 animate-in slide-in-from-top-4 duration-300">
                         <label className="small fw-bold text-muted text-uppercase d-block mb-2">Change to Laptop IP</label>
                         <div className="input-group input-group-sm">
-                            <span className="input-group-text bg-white border-end-0 pe-1">{protocol}//</span>
+                            <span className="input-group-text bg-white border-end-0 pe-1">{protocol}{'//'}</span>
                             <input 
                                 type="text" 
                                 className="form-control border-start-0 ps-1 py-2 fw-medium"
