@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --eco-primary: #10b981;
+  --eco-primary-hover: #059669;
+  --eco-primary-light: rgba(16, 185, 129, 0.1);
+  --eco-secondary: #0f172a;
+  --eco-bg: #f8fafc;
+  --eco-surface: #ffffff;
+  --eco-text: #1e293b;
+  --eco-text-muted: #64748b;
+  --eco-border: #e2e8f0;
+
+  /* Dashboard Resource Colors */
+  --res-water: #0ea5e9;
+  --res-electricity: #eab308;
+  --res-waste: #f97316;
+  --res-transport: #8b5cf6;
+  
+  /* Creative Vivid Tokens */
+  --eco-gradient: linear-gradient(135deg, #10b981 0%, #0d9488 50%, #0891b2 100%);
+  --eco-gradient-soft: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+  --eco-shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+  --eco-card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+
+  /* Glassmorphism Refinement */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.05);
+}
+
+html {
+  font-size: 15px; /* Dashboard base font size */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--eco-bg);
+  color: var(--eco-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6, .display-font {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+/* Base custom styles */
+a {
+  text-decoration: none;
+  color: var(--eco-primary);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--eco-primary-hover);
+}
+
+/* Custom Card System */
+.card-eco {
+  background: var(--eco-surface);
+  border: 1px solid var(--eco-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+}
+
+.glass-card:hover::before {
+  left: 150%;
+}
+
+/* Interactivity Classes */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+}
+
+.active-click:active {
+  transform: scale(0.98);
+}
+
+/* Custom Buttons */
+.btn-eco-primary {
+  background: var(--eco-gradient);
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 0.75rem;
+  padding: 0.6rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+}
+
+.btn-eco-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+  filter: brightness(1.1);
+}
+
+.btn-eco-outline {
+  background-color: transparent;
+  color: var(--eco-primary);
+  border: 2px solid var(--eco-primary);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.375rem 1.125rem;
+  transition: all 0.2s ease;
+}
+
+.btn-eco-outline:hover {
+  background-color: var(--eco-primary-hover);
+  border-color: var(--eco-primary-hover);
+  color: white;
+}
+
+/* Sidebar Styling */
+.sidebar-eco {
+  background-color: var(--eco-surface);
+  border-right: 1px solid var(--eco-border);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--eco-text-muted);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(16, 185, 129, 0.05);
+  color: var(--eco-primary);
+}
+
+.sidebar-link.active {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--eco-primary);
+  font-weight: 600;
+}
+
+.sidebar-icon {
+  font-size: 1.25rem;
+}
+
+/* Status Badges */
+.badge-eco {
+  padding: 0.35em 0.8em;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.badge-pending { background-color: #fef3c7; color: #d97706; }
+.badge-progress { background-color: #e0f2fe; color: #0284c7; }
+.badge-resolved { background-color: #d1fae5; color: #059669; }
+
+/* Custom Form Elements */
+.form-control-eco {
+  border: 1px solid var(--eco-border);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-control-eco:focus {
+  border-color: var(--eco-primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  outline: none;
+}
+
+/* Custom Scrollbar for the app */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Typography helpers */
+.text-xs-caps {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--eco-text-muted);
+}
+
+.text-small {
+  font-size: 0.85rem;
+}
+
+/* Layout helpers */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Smooth enter animations */
+.fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Eco pattern background */
+.bg-eco-pattern {
+  background-image: radial-gradient(var(--eco-primary-light) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Skeleton Loading State */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(241, 245, 249, 1) 25%,
+    rgba(248, 250, 252, 1) 37%,
+    rgba(241, 245, 249, 1) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Page Transition Wrapper */
+.animate-page {
+  animation: pageIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Mobile-First Refinements */
+@media (max-width: 768px) {
+  html {
+    font-size: 13px;
+  }
+  
+  .sidebar-eco {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar-eco.open {
+    transform: translateX(0);
+  }
+
+  .glass-card {
+    border-radius: 1rem;
+    padding: 1.25rem !important;
+  }
+}
