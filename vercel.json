@@ -1,0 +1,10 @@
+﻿{
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "framework": "create-react-app",
+  "rootDirectory": "client",
+  "env": {
+    "REACT_APP_API_URL": "https://surya-campus-sustainability-2.onrender.com",
+    "CI": "false"
+  }
+}
