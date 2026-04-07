@@ -18,7 +18,8 @@ app.use(cors({
         'http://localhost:3000',
         'http://localhost:3001',
         'https://surya-campus-sustainability-report-portal-9jahxqmeq.vercel.app',
-        'https://surya-campus-sustainability-report-portal-oqe0o8eap.vercel.app'
+        'https://surya-campus-sustainability-report-portal-oqe0o8eap.vercel.app',
+        'https://surya-campus-sustainability-report-portal-bujgiivs0.vercel.app'
     ],
     credentials: true
 }));
