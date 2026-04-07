@@ -17,11 +17,14 @@ app.use(cors({
     origin: [
         'http://localhost:3000',
         'http://localhost:3001',
+        'https://surya-campus-sustainability-reporti.vercel.app',
         'https://surya-campus-sustainability-reporti-omega.vercel.app',
         'https://surya-campus-sustainability-app.vercel.app'
     ],
     credentials: true
 }));
+
+app.options('*', cors());
 
 // Request logging middleware
 app.use((req, res, next) => {
