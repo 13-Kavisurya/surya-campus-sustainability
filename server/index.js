@@ -11,21 +11,15 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-
-// CORS - allow localhost and all Vercel preview/production URLs for this project
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-];
-
-const vercelPattern = /^https:\/\/surya-campus-sustainability(-report-portal)?(-[a-z0-9]+)?\.vercel\.app$/;
-
-app.use(cors({
+const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+        // Allow requests with no origin (e.g. Postman, mobile apps)
         if (!origin) return callback(null, true);
+        const allowedOrigins = [
+            'http://localhost:3000',
+            'http://localhost:3001',
+        ];
+        const vercelPattern = /^https:\/\/surya-campus-sustainability(-report-portal)?(-[a-z0-9]+)?\.vercel\.app$/;
         if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
             return callback(null, true);
         }
@@ -35,7 +29,16 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+
+// MUST be first — handle CORS before anything else
+app.use(cors(corsOptions));
+
+// Explicitly respond to all OPTIONS preflight requests
+app.options('*', cors(corsOptions));
+
+// Body parsing middleware (after CORS)
+app.use(express.json());
 
 // Request logging middleware
 app.use((req, res, next) => {
