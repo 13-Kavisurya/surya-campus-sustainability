@@ -13,15 +13,28 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+// CORS - allow localhost and all Vercel preview/production URLs for this project
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+];
+
+const vercelPattern = /^https:\/\/surya-campus-sustainability(-report-portal)?(-[a-z0-9]+)?\.vercel\.app$/;
+
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'https://surya-campus-sustainability-report-portal-9jahxqmeq.vercel.app',
-        'https://surya-campus-sustainability-report-portal-oqe0o8eap.vercel.app',
-        'https://surya-campus-sustainability-report-portal-bujgiivs0.vercel.app'
-    ],
-    credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
+            return callback(null, true);
+        }
+        console.warn(`CORS blocked for origin: ${origin}`);
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Request logging middleware
