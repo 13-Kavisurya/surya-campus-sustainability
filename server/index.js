@@ -70,89 +70,79 @@ app.get('/api/seed-all', async (req, res) => {
         const SustainabilityReport = require('./models/SustainabilityReport');
         const ResourceUsage = require('./models/ResourceUsage');
 
-        console.log('--- Starting Super Seed ---');
+        console.log('--- Starting Super Seed (Large Volume) ---');
         
         // 1. Ensure Super Admin exists
         const adminEmail = 'admin@campus.edu';
-        let admin = await User.findOne({ email: adminEmail });
-        if (!admin) {
-            admin = await User.create({
-                name: 'Super Admin',
-                email: adminEmail,
-                password: 'Admin@123',
-                user_type: 'admin'
-            });
-            console.log('Admin created');
-        }
+        await User.findOneAndUpdate(
+            { email: adminEmail },
+            { name: 'Super Admin', password: 'Admin@123', user_type: 'admin' },
+            { upsert: true, new: true }
+        );
 
-        // 2. Seed Staff (Coordinators)
-        const staffData = [
-            { name: 'Dr. Ramesh Kumar', email: 'ramesh.k@bitsathy.ac.in' },
-            { name: 'Prof. Anitha S', email: 'anitha.s@bitsathy.ac.in' }
-        ];
+        // 2. Seed 5 Staff (Coordinators)
+        const staffNames = ['Dr. Ramesh', 'Prof. Anitha', 'Suresh V', 'Meena R', 'Karthik P'];
         let staffIds = [];
-        for (const s of staffData) {
-            let staff = await User.findOne({ email: s.email });
-            if (!staff) {
-                staff = await User.create({ ...s, password: 'password123', user_type: 'staff' });
-            }
+        for (let i = 0; i < 5; i++) {
+            const email = `staff${i + 1}@bitsathy.ac.in`;
+            const staff = await User.findOneAndUpdate(
+                { email },
+                { name: staffNames[i], password: 'password123', user_type: 'staff' },
+                { upsert: true, new: true }
+            );
             staffIds.push(staff._id);
         }
-        console.log('Staff seeded');
 
-        // 3. Seed Students
-        const students = [
-            { name: 'Aamina A', email: '7376231CS101@bitsathy.ac.in' },
-            { name: 'Abhinav A R', email: '7376231CS102@bitsathy.ac.in' },
-            { name: 'Abiksha D', email: '7376231CS104@bitsathy.ac.in' }
-        ];
+        // 3. Seed 10 Students
         let studentIds = [];
-        for (const s of students) {
-            let stu = await User.findOne({ email: s.email });
-            if (!stu) {
-                stu = await User.create({ ...s, password: 'password123', user_type: 'student' });
-            }
-            studentIds.push(stu._id);
+        for (let i = 0; i < 10; i++) {
+            const regNo = 100 + i;
+            const email = `7376231CS${regNo}@bitsathy.ac.in`;
+            const student = await User.findOneAndUpdate(
+                { email },
+                { name: `Student ${i + 1}`, password: 'password123', user_type: 'student' },
+                { upsert: true, new: true }
+            );
+            studentIds.push(student._id);
         }
-        console.log('Students seeded');
 
-        // 4. Seed some reports
-        const reportTypes = ['waste', 'water', 'energy'];
+        // 4. Seed 1 Report for EVERY student
+        const reportTypes = ['waste', 'water', 'energy', 'suggestion'];
+        const issueTitles = ['Leaky Faucet', 'Waste Overload', 'Lights On', 'Recycling Request'];
         for (const sid of studentIds) {
-            const exists = await SustainabilityReport.findOne({ user_id: sid });
-            if (!exists) {
+            // Check if student already has a report, if not create one
+            const hasReport = await SustainabilityReport.findOne({ user_id: sid });
+            if (!hasReport) {
                 await SustainabilityReport.create({
                     user_id: sid,
-                    report_type: reportTypes[Math.floor(Math.random() * 3)],
-                    title: 'Test Issue ' + Math.random().toString(36).substring(7),
-                    description: 'This is a test sustainability report seeded automatically.',
-                    location: 'Main Block',
+                    report_type: reportTypes[Math.floor(Math.random() * reportTypes.length)],
+                    title: issueTitles[Math.floor(Math.random() * issueTitles.length)],
+                    description: 'Automated test report for database populating.',
+                    location: 'Campus Block ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)),
                     status: 'pending'
                 });
             }
         }
-        console.log('Reports seeded');
 
-        // 5. Seed Resource Usage
-        const types = ['Water', 'Electricity', 'Waste'];
+        // 5. Seed Resource Usage for each Staff
+        const resourceTypes = ['Water', 'Electricity', 'Waste'];
         for (const staffId of staffIds) {
-            const usageExists = await ResourceUsage.findOne({ loggedBy: staffId });
-            if (!usageExists) {
-                for (const type of types) {
+            const hasUsage = await ResourceUsage.findOne({ loggedBy: staffId });
+            if (!hasUsage) {
+                for (const type of resourceTypes) {
                     await ResourceUsage.create({
                         resourceType: type,
-                        metrics: { units: 100 + Math.floor(Math.random() * 50) },
+                        metrics: { units: 100 + Math.floor(Math.random() * 200) },
                         loggedBy: staffId,
                         date: new Date(),
                         location: 'Main Campus',
-                        totalCost: 50 + Math.floor(Math.random() * 100)
+                        totalCost: 100 + Math.floor(Math.random() * 500)
                     });
                 }
             }
         }
-        console.log('Usage data seeded');
 
-        res.status(201).send('✅ Database fully seeded with Admin, Staff, Students, Reports, and Usage data!');
+        res.status(201).send('✅ Success! 10 Students, 5 Staff, 10 Reports, and Usage data created.');
     } catch (err) {
         console.error('Seed error:', err);
         res.status(500).json({ error: err.message });
