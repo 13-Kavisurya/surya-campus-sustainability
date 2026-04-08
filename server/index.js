@@ -34,8 +34,8 @@ const corsOptions = {
 // MUST be first — handle CORS before anything else
 app.use(cors(corsOptions));
 
-// Explicitly respond to all OPTIONS preflight requests
-app.options('*', cors(corsOptions));
+// Explicitly respond to all OPTIONS preflight requests (Express 5 compatible)
+app.options(/.*/, cors(corsOptions));
 
 // Body parsing middleware (after CORS)
 app.use(express.json());
