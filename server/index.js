@@ -19,7 +19,7 @@ const corsOptions = {
             'http://localhost:3000',
             'http://localhost:3001',
         ];
-        const vercelPattern = /^https:\/\/surya-campus-sustainability(-report-portal)?(-[a-z0-9]+)?\.vercel\.app$/;
+        const vercelPattern = /^https:\/\/surya-campus-sustainability[a-z0-9-]*\.vercel\.app$/;
         if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
             return callback(null, true);
         }
