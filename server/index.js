@@ -63,6 +63,27 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+// Emergency route to fix missing Admin
+app.get('/api/fix-admin', async (req, res) => {
+    try {
+        const User = require('./models/User');
+        const email = 'admin@campus.edu';
+        let admin = await User.findOne({ email });
+        if (!admin) {
+            await User.create({
+                name: 'Super Admin',
+                email,
+                password: 'Admin@123',
+                user_type: 'admin'
+            });
+            return res.status(201).send('Admin created successfully! You can now log in at /admin/login');
+        }
+        res.send('Admin already exists in the database.');
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Port
 const PORT = process.env.PORT || 5000;
 
