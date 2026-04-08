@@ -106,43 +106,57 @@ app.get('/api/seed-all', async (req, res) => {
             studentIds.push(student._id);
         }
 
-        // 4. Seed 1 Report for EVERY student
+        // 4. Seed exactly 1 Report for EVERY student (10 total) with specific statuses
         const reportTypes = ['waste', 'water', 'energy', 'suggestion'];
         const issueTitles = ['Leaky Faucet', 'Waste Overload', 'Lights On', 'Recycling Request'];
-        for (const sid of studentIds) {
-            // Check if student already has a report, if not create one
-            const hasReport = await SustainabilityReport.findOne({ user_id: sid });
-            if (!hasReport) {
-                await SustainabilityReport.create({
-                    user_id: sid,
-                    report_type: reportTypes[Math.floor(Math.random() * reportTypes.length)],
-                    title: issueTitles[Math.floor(Math.random() * issueTitles.length)],
-                    description: 'Automated test report for database populating.',
-                    location: 'Campus Block ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)),
-                    status: 'pending'
-                });
-            }
-        }
+        
+        await SustainabilityReport.deleteMany({ user_id: { $in: studentIds } });
 
-        // 5. Seed Resource Usage for each Staff
+        const statuses = [
+            'resolved', 'resolved', 'resolved', 'resolved', 'resolved', 'resolved',
+            'approved', 'approved', 'approved',
+            'rejected'
+        ];
+
+        for (let i = 0; i < studentIds.length; i++) {
+            const sid = studentIds[i];
+            const status = statuses[i];
+            const coordinator = staffIds[Math.floor(Math.random() * staffIds.length)];
+
+            await SustainabilityReport.create({
+                user_id: sid,
+                report_type: reportTypes[Math.floor(Math.random() * reportTypes.length)],
+                title: issueTitles[Math.floor(Math.random() * issueTitles.length)],
+                description: 'Automated test report for database populating.',
+                location: 'Campus Block ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)),
+                status: status,
+                resolvedBy: status === 'resolved' ? coordinator : null
+            });
+        }
+        console.log('10 reports seeded (6 resolved, 3 approved, 1 rejected)');
+
+        // 5. Seed 6 Months of Monthly Usage for EACH Staff
         const resourceTypes = ['Water', 'Electricity', 'Waste'];
         for (const staffId of staffIds) {
-            const hasUsage = await ResourceUsage.findOne({ loggedBy: staffId });
-            if (!hasUsage) {
+            await ResourceUsage.deleteMany({ loggedBy: staffId });
+            for (let m = 0; m < 6; m++) {
+                const date = new Date();
+                date.setMonth(date.getMonth() - m);
+
                 for (const type of resourceTypes) {
                     await ResourceUsage.create({
                         resourceType: type,
-                        metrics: { units: 100 + Math.floor(Math.random() * 200) },
+                        metrics: { units: 100 + Math.floor(Math.random() * 500) },
                         loggedBy: staffId,
-                        date: new Date(),
+                        date: date,
                         location: 'Main Campus',
-                        totalCost: 100 + Math.floor(Math.random() * 500)
+                        totalCost: 200 + Math.floor(Math.random() * 800)
                     });
                 }
             }
         }
-
-        res.status(201).send('✅ Success! 10 Students, 5 Staff, 10 Reports, and Usage data created.');
+        console.log('6 months of usage data seeded for all staff');
+        res.status(201).send('✅ Success! 10 Students, 5 Staff, 10 Reports (6 res, 3 acc, 1 rej), and Usage data created.');
     } catch (err) {
         console.error('Seed error:', err);
         res.status(500).json({ error: err.message });
