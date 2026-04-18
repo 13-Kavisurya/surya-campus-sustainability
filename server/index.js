@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const bcrypt = require('bcryptjs');
 
 // Load environment variables
 dotenv.config();
@@ -76,20 +77,26 @@ app.get('/api/seed-all', async (req, res) => {
         const adminEmail = 'admin@campus.edu';
         let admin = await User.findOne({ email: adminEmail });
         if (!admin) admin = new User({ email: adminEmail });
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedAdminPass = await bcrypt.hash('Admin@123', salt);
+        
         admin.name = 'Super Admin';
-        admin.password = 'Admin@123';
+        admin.password = hashedAdminPass;
         admin.user_type = 'admin';
         await admin.save();
 
         // 2. Seed 5 Staff (Coordinators)
         const staffNames = ['Dr. Ramesh', 'Prof. Anitha', 'Suresh V', 'Meena R', 'Karthik P'];
         let staffIds = [];
+        const hashedStaffPass = await bcrypt.hash('password123', salt);
+        
         for (let i = 0; i < 5; i++) {
             const email = `staff${i + 1}@bitsathy.ac.in`;
             let staff = await User.findOne({ email });
             if (!staff) staff = new User({ email });
             staff.name = staffNames[i];
-            staff.password = 'password123';
+            staff.password = hashedStaffPass;
             staff.user_type = 'staff';
             await staff.save();
             staffIds.push(staff._id);
@@ -103,7 +110,7 @@ app.get('/api/seed-all', async (req, res) => {
             let student = await User.findOne({ email });
             if (!student) student = new User({ email });
             student.name = `Student ${i + 1}`;
-            student.password = 'password123';
+            student.password = hashedStaffPass;
             student.user_type = 'student';
             await student.save();
             studentIds.push(student._id);
