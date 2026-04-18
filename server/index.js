@@ -74,22 +74,24 @@ app.get('/api/seed-all', async (req, res) => {
         
         // 1. Ensure Super Admin exists
         const adminEmail = 'admin@campus.edu';
-        await User.findOneAndUpdate(
-            { email: adminEmail },
-            { name: 'Super Admin', password: 'Admin@123', user_type: 'admin' },
-            { upsert: true, new: true }
-        );
+        let admin = await User.findOne({ email: adminEmail });
+        if (!admin) admin = new User({ email: adminEmail });
+        admin.name = 'Super Admin';
+        admin.password = 'Admin@123';
+        admin.user_type = 'admin';
+        await admin.save();
 
         // 2. Seed 5 Staff (Coordinators)
         const staffNames = ['Dr. Ramesh', 'Prof. Anitha', 'Suresh V', 'Meena R', 'Karthik P'];
         let staffIds = [];
         for (let i = 0; i < 5; i++) {
             const email = `staff${i + 1}@bitsathy.ac.in`;
-            const staff = await User.findOneAndUpdate(
-                { email },
-                { name: staffNames[i], password: 'password123', user_type: 'staff' },
-                { upsert: true, new: true }
-            );
+            let staff = await User.findOne({ email });
+            if (!staff) staff = new User({ email });
+            staff.name = staffNames[i];
+            staff.password = 'password123';
+            staff.user_type = 'staff';
+            await staff.save();
             staffIds.push(staff._id);
         }
 
@@ -98,11 +100,12 @@ app.get('/api/seed-all', async (req, res) => {
         for (let i = 0; i < 10; i++) {
             const regNo = 100 + i;
             const email = `7376231CS${regNo}@bitsathy.ac.in`;
-            const student = await User.findOneAndUpdate(
-                { email },
-                { name: `Student ${i + 1}`, password: 'password123', user_type: 'student' },
-                { upsert: true, new: true }
-            );
+            let student = await User.findOne({ email });
+            if (!student) student = new User({ email });
+            student.name = `Student ${i + 1}`;
+            student.password = 'password123';
+            student.user_type = 'student';
+            await student.save();
             studentIds.push(student._id);
         }
 
