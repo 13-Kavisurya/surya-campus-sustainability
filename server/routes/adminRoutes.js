@@ -34,6 +34,27 @@ router.get('/auth/auto-login', async (req, res) => {
     }
 });
 
+// Admin Registration
+router.post('/auth/register', async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(400).json({ message: 'Admin account with this email already exists' });
+
+        const admin = await User.create({
+            name,
+            email,
+            password,
+            user_type: 'admin'
+        });
+
+        const token = generateAdminToken(admin._id);
+        res.status(201).json({ _id: admin._id, name: admin.name, email: admin.email, user_type: admin.user_type, token });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // Credential-based admin login
 router.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;

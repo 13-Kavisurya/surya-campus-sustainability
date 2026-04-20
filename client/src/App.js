@@ -37,6 +37,7 @@ import MonthlyUsageTracker from './pages/admin/MonthlyUsageTracker';
 import BlockAssignment from './pages/admin/BlockAssignment';
 import LoginQrCode from './pages/admin/LoginQrCode';
 import AdminLogin from './pages/admin/AdminLogin';
+import AdminRegister from './pages/admin/AdminRegister';
 
 const ProtectedRoute = ({ children, allowedTypes }) => {
   const { user, loading } = useAuth();
@@ -115,6 +116,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<DashboardRedirect />} />
             <Route path="/" element={<DashboardRedirect />} />
